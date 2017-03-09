@@ -7,13 +7,25 @@
 //
 
 import UIKit
+import CoreData
 
 private let reuseIdentifier = "Cell"
 
-class FriendsController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class FriendsController: UICollectionViewController, UICollectionViewDelegateFlowLayout, NSFetchedResultsControllerDelegate {
     
-    var dataSource: [Message]?
+    lazy var fetchResultsController: NSFetchedResultsController<NSFetchRequestResult> = {
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Friend")
+        request.predicate = NSPredicate(format: "lastMessage != nil")
+        request.sortDescriptors = [NSSortDescriptor(key: "lastMessage.date", ascending: false)]
+        let delegate = UIApplication.shared.delegate as! AppDelegate
+        let context = delegate.persistentContainer.viewContext
+        let frc = NSFetchedResultsController(fetchRequest: request, managedObjectContext:
+            context, sectionNameKeyPath: nil, cacheName: nil)
+        frc.delegate = self
+        return frc
+    }()
     
+
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.title = "Recent"
@@ -26,6 +38,12 @@ class FriendsController: UICollectionViewController, UICollectionViewDelegateFlo
         
         // load DataSource
         setupData()
+        
+        do {
+            try fetchResultsController.performFetch()
+        } catch let err {
+            print(err)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -41,21 +59,46 @@ class FriendsController: UICollectionViewController, UICollectionViewDelegateFlo
     }
 
     
+    var blockOperations = [BlockOperation]()
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        if type == .insert {
+            blockOperations.append(BlockOperation(block: {
+                self.collectionView?.insertItems(at: [newIndexPath!])
+            }))
+        }
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        collectionView?.performBatchUpdates({
+            for operation in self.blockOperations {
+                operation.start()
+            }
+        }, completion: { (completion) in
+            
+            let lastItem = self.fetchResultsController.sections![0].numberOfObjects - 1
+            let indexPath = IndexPath(item: lastItem, section: 0)
+            self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
+            self.view.layoutIfNeeded()
+        })
+    }
+    
     // MARK: UICollectionViewDataSource
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
-        if let count = dataSource?.count {
+        if let count = fetchResultsController.sections?[section].numberOfObjects {
             return count
         }
-        
         return 0
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! FriendCell
         
-        cell.message = dataSource?[indexPath.item]
+        let friend = fetchResultsController.object(at: indexPath) as! Friend
+
+        cell.message = friend.lastMessage
         
         return cell
     }
@@ -70,7 +113,9 @@ class FriendsController: UICollectionViewController, UICollectionViewDelegateFlo
         let layout = UICollectionViewFlowLayout()
         let controler = ChatLogController(collectionViewLayout: layout)
         
-        controler.friend = dataSource?[indexPath.item].friend
+        let friend = fetchResultsController.object(at: indexPath) as! Friend
+
+        controler.friend = friend
         
         navigationController?.pushViewController(controler, animated: true)
         

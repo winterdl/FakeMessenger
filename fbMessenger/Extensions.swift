@@ -90,8 +90,6 @@ extension FriendsController {
                 print(err)
             }
         }
-        
-        loadData()
     
     }
     
@@ -108,6 +106,7 @@ extension FriendsController {
         message.text = messageText
         message.hasReaded = isReaded
         message.isSender = isSender
+        friend.lastMessage = message
         message.date = NSDate().addingTimeInterval(-minutesAgo * 60)
     
     }
@@ -118,40 +117,12 @@ extension FriendsController {
         message.text = messageText
         message.hasReaded = isReaded
         message.isSender = true
+        friend.lastMessage = message
         message.date = NSDate().addingTimeInterval(-minutesAgo * 60)
-    }
-    
-    
-    func loadData() {
-        let delegate = UIApplication.shared.delegate as? AppDelegate
-        
-        if let context = delegate?.persistentContainer.viewContext {
-            
-            if let friends = fetchFriends() {
-                
-                dataSource = [Message]()
-                
-                for friend in friends {
-                    let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Message")
-                    //sort fetch results by date param
-                    fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
-                    fetchRequest.predicate = NSPredicate(format: "friend.name = %@", friend.name!)
-                    fetchRequest.fetchLimit = 1
-                    
-                    do {
-                        let fetchedMessages = try context.fetch(fetchRequest) as! [Message]
-                        dataSource?.append(contentsOf: fetchedMessages)
-                    } catch let err {
-                        print(err)
-                    }
-                }
-                
-                dataSource = dataSource?.sorted(by: {$0.date!.compare($1.date! as Date) == .orderedDescending})
 
-            }
-            
-        }
     }
+    
+    
     
     private func fetchFriends() -> [Friend]? {
        

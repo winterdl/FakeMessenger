@@ -19,38 +19,16 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         }
     }
     
-    
-    let inputContainerView: UIView = {
-        let view = UIView()
+    lazy var inputContainerView: InputTextView = {
+        let view = InputTextView()
+        view.friend = self.friend
         view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
-    let messageTextInputField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Type message here.."
-        textField.translatesAutoresizingMaskIntoConstraints = false
-        return textField
-    }()
-    
-    let topBorderLine: UIView = {
-        let view = UIView()
-        view.backgroundColor = UIColor(white: 0.80, alpha: 1)
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-    
-    lazy var sendButton: UIButton = {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Send", for: .normal)
-        button.setTitleColor(UIColor.init(red: 1/255, green: 122/255, blue: 255/255, alpha: 1), for: .normal)
-        button.addTarget(self, action: #selector(self.sendButtonHandler), for: .touchUpInside)
-        return button
-    }()
-    
-    lazy var fetchResultsController: NSFetchedResultsController<NSFetchRequestResult> = {         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Message")
+    lazy var fetchResultsController: NSFetchedResultsController<NSFetchRequestResult> = {
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Message")
         request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         request.predicate = NSPredicate(format: "friend.name = %@", self.friend!.name!)
         let delegate = UIApplication.shared.delegate as! AppDelegate
@@ -60,23 +38,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         return frc
     }()
     
-    func sendButtonHandler() {
-        if messageTextInputField.text != "" {
-            
-            let delegate = UIApplication.shared.delegate as! AppDelegate
-            let context = delegate.persistentContainer.viewContext
-            
-            FriendsController.createOwnMessageWithText(messageText: messageTextInputField.text!, friend: friend!, minutesAgo: 0, isReaded: true, context: context)
-            
-            do {
-                try context.save()
-                messageTextInputField.text = nil
-            } catch let err {
-                print(err)
-            }
-        }
-        
-    }
     
     var inputContainerBottomConstraint: NSLayoutConstraint?
     
@@ -87,20 +48,6 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
         view.addConstraintsWithFormat(format: "V:[v0(60)]", views: inputContainerView)
         inputContainerBottomConstraint = NSLayoutConstraint(item: inputContainerView, attribute: .bottom, relatedBy: .equal, toItem: self.view, attribute: .bottom, multiplier: 1, constant: 0)
         inputContainerBottomConstraint?.isActive = true
-        
-        
-        inputContainerView.addSubview(messageTextInputField)
-        inputContainerView.addConstraintsWithFormat(format: "H:|-8-[v0]|", views: messageTextInputField)
-        inputContainerView.addConstraintsWithFormat(format: "V:[v0(60)]|", views: messageTextInputField)
-
-        inputContainerView.addSubview(topBorderLine)
-        inputContainerView.addSubview(sendButton)
-        
-        inputContainerView.addConstraintsWithFormat(format: "H:|[v0]|", views: topBorderLine)
-        inputContainerView.addConstraintsWithFormat(format: "V:|[v0(1)]", views: topBorderLine)
-        
-        inputContainerView.addConstraintsWithFormat(format: "H:[v0(80)]|", views: sendButton)
-        inputContainerView.addConstraintsWithFormat(format: "V:|[v0]|", views: sendButton)
         
     }
     
@@ -210,7 +157,8 @@ class ChatLogController: UICollectionViewController, UICollectionViewDelegateFlo
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.messageTextInputField.endEditing(true)
+        
+        self.inputContainerView.messageTextInputField.endEditing(true)
     }
     
     

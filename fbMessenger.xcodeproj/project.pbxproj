@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E60715181E715F76009A011B /* InputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E60715171E715F76009A011B /* InputTextView.swift */; };
 		E6ADA0A41E6EECBF00128E06 /* ChatLogMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6ADA0A31E6EECBF00128E06 /* ChatLogMessageCell.swift */; };
 		E6B8A7E11E6A00D2006D36C8 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6B8A7E01E6A00D2006D36C8 /* CustomTabBarController.swift */; };
 		E6C10BA31E66E33E006A41C3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6C10BA21E66E33E006A41C3 /* AppDelegate.swift */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E60715171E715F76009A011B /* InputTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputTextView.swift; sourceTree = "<group>"; };
 		E6ADA0A31E6EECBF00128E06 /* ChatLogMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLogMessageCell.swift; sourceTree = "<group>"; };
 		E6B8A7E01E6A00D2006D36C8 /* CustomTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
 		E6C10B9F1E66E33E006A41C3 /* fbMessenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = fbMessenger.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,6 +49,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E607151B1E7162C7009A011B /* SupportingFiles */ = {
+			isa = PBXGroup;
+			children = (
+				E6C10BAC1E66E33F006A41C3 /* Assets.xcassets */,
+				E6C10BAE1E66E33F006A41C3 /* LaunchScreen.storyboard */,
+				E6C10BB11E66E33F006A41C3 /* Info.plist */,
+			);
+			name = SupportingFiles;
+			sourceTree = "<group>";
+		};
+		E607151C1E7162F2009A011B /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				E6C10BB71E66E4AA006A41C3 /* FriendsController.swift */,
+				E6B8A7E01E6A00D2006D36C8 /* CustomTabBarController.swift */,
+				E6F200FD1E69820E00C65D3F /* ChatLogController.swift */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
 		E6C10B961E66E33E006A41C3 = {
 			isa = PBXGroup;
 			children = (
@@ -67,15 +89,11 @@
 			isa = PBXGroup;
 			children = (
 				E6E3A2821E67660900FFCD3D /* View */,
-				E6C10BA21E66E33E006A41C3 /* AppDelegate.swift */,
-				E6B8A7E01E6A00D2006D36C8 /* CustomTabBarController.swift */,
-				E6C10BB71E66E4AA006A41C3 /* FriendsController.swift */,
-				E6F200FD1E69820E00C65D3F /* ChatLogController.swift */,
-				E6C10BAC1E66E33F006A41C3 /* Assets.xcassets */,
-				E6C10BAE1E66E33F006A41C3 /* LaunchScreen.storyboard */,
-				E6C10BB11E66E33F006A41C3 /* Info.plist */,
-				E6C10BA91E66E33F006A41C3 /* fbMessenger.xcdatamodeld */,
+				E607151C1E7162F2009A011B /* Controller */,
 				E6E3A2871E67677300FFCD3D /* Extensions.swift */,
+				E607151B1E7162C7009A011B /* SupportingFiles */,
+				E6C10BA91E66E33F006A41C3 /* fbMessenger.xcdatamodeld */,
+				E6C10BA21E66E33E006A41C3 /* AppDelegate.swift */,
 			);
 			path = fbMessenger;
 			sourceTree = "<group>";
@@ -86,6 +104,7 @@
 				E6E3A2831E67663E00FFCD3D /* BaseCell.swift */,
 				E6E3A2851E67668300FFCD3D /* FriendCell.swift */,
 				E6ADA0A31E6EECBF00128E06 /* ChatLogMessageCell.swift */,
+				E60715171E715F76009A011B /* InputTextView.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -167,6 +186,7 @@
 				E6C10BB81E66E4AA006A41C3 /* FriendsController.swift in Sources */,
 				E6F200FE1E69820E00C65D3F /* ChatLogController.swift in Sources */,
 				E6C10BAB1E66E33F006A41C3 /* fbMessenger.xcdatamodeld in Sources */,
+				E60715181E715F76009A011B /* InputTextView.swift in Sources */,
 				E6C10BA31E66E33E006A41C3 /* AppDelegate.swift in Sources */,
 				E6ADA0A41E6EECBF00128E06 /* ChatLogMessageCell.swift in Sources */,
 				E6E3A2861E67668300FFCD3D /* FriendCell.swift in Sources */,
